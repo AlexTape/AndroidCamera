@@ -99,7 +99,7 @@ public abstract class AbstractCameraActivity extends Activity {
                         String.format("new width=%d; new height=%d; new orientation=" + orientation, view.getWidth(),
                                 view.getHeight()));
 
-                //cameraController.configureCamera(orientation, view.getWidth(), view.getHeight());
+                cameraController.configureCamera(orientation, view.getWidth(), view.getHeight());
 
                 view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -113,15 +113,12 @@ public abstract class AbstractCameraActivity extends Activity {
             case Surface.ROTATION_0:
                 returnThis = Orientation.PORTRAIT;
                 break;
-
             case Surface.ROTATION_90:
                 returnThis = Orientation.LANDSCAPE;
                 break;
-
             case Surface.ROTATION_180:
                 returnThis = Orientation.REVERSE_PORTRAIT;
                 break;
-
             case Surface.ROTATION_270:
                 returnThis = Orientation.REVERSE_LANDSCAPE;
                 break;

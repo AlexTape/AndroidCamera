@@ -149,14 +149,40 @@ public class CameraController {
 
             // TODO set params
 
-            for(Camera.Size size: mSupportedPreviewSizes) {
-                Log.d(TAG, "mSupportedPreviewSizes: x=" + size.width + "; y=" + size.height);
-            }
+//            for(Camera.Size size: mSupportedPreviewSizes) {
+//                Log.d(TAG, "mSupportedPreviewSizes: x=" + size.width + "; y=" + size.height);
+//            }
 
             Camera.Size cs = mSupportedPreviewSizes.get(0);
             mCameraParameter.setPreviewSize(cs.width, cs.height);
 
+            Log.d(TAG, "DO ROTATION");
+            switch (mSurfaceOrientation) {
+                case PORTRAIT:
+                    Log.d(TAG, "rotate to PORTRAIT");
+                    mCamera.setDisplayOrientation(90);
+                    break;
+                case LANDSCAPE:
+                    Log.d(TAG, "rotate to LANDSCAPE");
+                    mCamera.setDisplayOrientation(0);
+                    break;
+                case REVERSE_PORTRAIT:
+                    Log.d(TAG, "rotate to REVERSE_PORTRAIT");
+                    mCamera.setDisplayOrientation(270);
+                    break;
+                case REVERSE_LANDSCAPE:
+                    Log.d(TAG, "rotate to REVERSE_LANDSCAPE");
+                    mCamera.setDisplayOrientation(180);
+                    break;
+                default:
+                    Log.d(TAG, "rotate to default");
+                    mCamera.setDisplayOrientation(0);
+                    break;
+            }
+
             mCamera.setParameters(mCameraParameter);
+        } else {
+            Log.d(TAG, "Camera is NULL");
         }
     }
 
