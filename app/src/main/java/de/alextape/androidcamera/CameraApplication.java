@@ -37,9 +37,11 @@ public class CameraApplication extends Application {
         }
         Log.d(TAG, "Initial orientation: " + initialOrientation);
         CameraController.setInitialOrientation(initialOrientation);
-
-
     }
 
-
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        throw new OutOfMemoryError("Low Memory");
+    }
 }

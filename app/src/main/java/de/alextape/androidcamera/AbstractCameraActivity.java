@@ -2,11 +2,12 @@ package de.alextape.androidcamera;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -20,6 +21,7 @@ public abstract class AbstractCameraActivity extends Activity {
     private static final String TAG = AbstractCameraActivity.class.getSimpleName() + "ARGH";
 
     private CameraController cameraController;
+    private OrientationEventListener mOrientationEventListener;
 
     public enum Orientation {
         PORTRAIT, LANDSCAPE, REVERSE_PORTRAIT, REVERSE_LANDSCAPE
@@ -37,6 +39,14 @@ public abstract class AbstractCameraActivity extends Activity {
         // init camera
         View layoutView = this.findViewById(R.id.layoutContainer);
         cameraController = CameraController.create(this, layoutView, new CameraCallback(), CameraController.CameraType.BACK_CAMERA);
+
+        mOrientationEventListener = new OrientationHelper(this);
+        if (mOrientationEventListener.canDetectOrientation()) {
+            mOrientationEventListener.enable();
+        } else {
+            finish();
+        }
+
     }
 
     @Override
@@ -79,7 +89,9 @@ public abstract class AbstractCameraActivity extends Activity {
         Log.d(TAG, "onDestroy");
         cameraController.stopAndReleaseCamera();
         cameraController.releaseView();
+        mOrientationEventListener.disable();
     }
+
 
     public void onConfigurationChanged(Configuration newConfiguration) {
 

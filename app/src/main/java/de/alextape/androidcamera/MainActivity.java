@@ -2,6 +2,7 @@ package de.alextape.androidcamera;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.hardware.Sensor;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -53,6 +54,5 @@ public class MainActivity extends AbstractCameraActivity {
         // The activity is about to be destroyed.
         //Log.d(TAG, "onDestroy");
     }
-
 
 }

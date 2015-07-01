@@ -9,6 +9,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,6 +24,19 @@ public class CameraController {
     private static CameraController _instance = null;
 
     private static AbstractCameraActivity.Orientation initialOrientation = null;
+
+    private ImageView imageView;
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
+    }
+
+    public int parameterHeight;
+    public int parameterWidth;
 
     public enum CameraType {
         FRONT_CAMERA, BACK_CAMERA
@@ -59,6 +73,8 @@ public class CameraController {
     private CameraController(Context context, View layoutView, CameraCallback mCameraCallback, CameraType camID) {
 
         Log.d(TAG, "CameraController");
+
+        this.imageView = (ImageView) layoutView.findViewById(R.id.imageView);
 
         this.mSurfaceView = (SurfaceView) layoutView.findViewById(R.id.cameraSurface);
         this.mSurfaceHolder = mSurfaceView.getHolder();
@@ -104,7 +120,7 @@ public class CameraController {
     }
 
     public static CameraController getInstance() {
-        Log.d(TAG, "getInstance");
+        //Log.d(TAG, "getInstance");
         return _instance;
     }
 
@@ -115,7 +131,7 @@ public class CameraController {
     }
 
     public Camera getCamera() {
-        Log.d(TAG, "getCamera");
+        //Log.d(TAG, "getCamera");
         return mCamera;
     }
 
@@ -158,6 +174,10 @@ public class CameraController {
         startCamera();
     }
 
+    public Integer getPreviewFormat() {
+        return mPreviewFormat;
+    }
+
     public void configureCamera() {
         Log.d(TAG, "configureCamera");
         if (mCamera != null) {
@@ -169,8 +189,10 @@ public class CameraController {
 //            if (mSupportedPreviewSizes != null) {
 //                mPreviewSize = getOptimalPreviewSize(mSupportedPreviewSizes, mWindowWidth, mWindowHeight);
 //                mCameraParameter.setPreviewSize(mWindowWidth, mWindowHeight);
-//                mPreviewFormat = mCameraParameter.getPreviewFormat();
+//
 //            }
+
+            mPreviewFormat = mCameraParameter.getPreviewFormat();
 
 
             // TODO FIX PREVIEW SIZES and make the available via options menu
@@ -197,35 +219,49 @@ public class CameraController {
             Camera.Size cs = mSupportedPreviewSizes.get(2);
             mCameraParameter.setPreviewSize(cs.width, cs.height);
             Log.d(TAG, "setPreviewSize mWindow: x=" + mWindowWidth + "; y=" + mWindowHeight);
-            Log.d(TAG, "setPreviewSize:cs x=" + cs.width + "; y=" + cs.height);
 
-            Log.d(TAG, "DO ROTATION");
-            switch (mSurfaceOrientation) {
-                case PORTRAIT:
-                    Log.d(TAG, "rotate to PORTRAIT");
-                    mCamera.setDisplayOrientation(90);
-                    break;
-                case LANDSCAPE:
-                    Log.d(TAG, "rotate to LANDSCAPE");
-                    mCamera.setDisplayOrientation(0);
-                    break;
-                case REVERSE_PORTRAIT:
-                    Log.d(TAG, "rotate to REVERSE_PORTRAIT");
-                    mCamera.setDisplayOrientation(270);
-                    break;
-                case REVERSE_LANDSCAPE:
-                    Log.d(TAG, "rotate to REVERSE_LANDSCAPE");
-                    mCamera.setDisplayOrientation(180);
-                    break;
-                default:
-                    Log.d(TAG, "rotate to default");
-                    mCamera.setDisplayOrientation(0);
-                    break;
-            }
+            parameterWidth = cs.width;
+            parameterHeight = cs.height;
+
+            Log.d(TAG, "setPreviewSize:cs x=" + parameterWidth + "; y=" + parameterHeight);
+
+            rotateOrientation();
 
             mCamera.setParameters(mCameraParameter);
         } else {
             Log.d(TAG, "Camera is NULL");
+        }
+    }
+
+    public void rotateOrientation(AbstractCameraActivity.Orientation orientation) {
+        Log.d(TAG, "configureCameraWithValues");
+        mSurfaceOrientation = orientation;
+        rotateOrientation();
+    }
+
+    private void rotateOrientation() {
+        Log.d(TAG, "DO ROTATION");
+        switch (mSurfaceOrientation) {
+            case PORTRAIT:
+                Log.d(TAG, "rotate to PORTRAIT");
+                mCamera.setDisplayOrientation(90);
+                break;
+            case LANDSCAPE:
+                Log.d(TAG, "rotate to LANDSCAPE");
+                mCamera.setDisplayOrientation(0);
+                break;
+            case REVERSE_PORTRAIT:
+                Log.d(TAG, "rotate to REVERSE_PORTRAIT");
+                mCamera.setDisplayOrientation(270);
+                break;
+            case REVERSE_LANDSCAPE:
+                Log.d(TAG, "rotate to REVERSE_LANDSCAPE");
+                mCamera.setDisplayOrientation(180);
+                break;
+            default:
+                Log.d(TAG, "rotate to default");
+                mCamera.setDisplayOrientation(0);
+                break;
         }
     }
 
