@@ -2,6 +2,7 @@ package de.alextape.androidcamera;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,9 +33,6 @@ public abstract class AbstractCameraActivity extends Activity {
 
         // TODO remove this later
         setContentView(R.layout.camera_layout);
-
-        // set default/initial orientation
-        //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // init camera
         View layoutView = this.findViewById(R.id.layoutContainer);

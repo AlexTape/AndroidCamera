@@ -22,6 +22,8 @@ public class CameraController {
 
     private static CameraController _instance = null;
 
+    private static AbstractCameraActivity.Orientation initialOrientation = null;
+
     public enum CameraType {
         FRONT_CAMERA, BACK_CAMERA
     }
@@ -41,8 +43,18 @@ public class CameraController {
 
     private AbstractCameraActivity.Orientation mSurfaceOrientation;
     private List<Camera.Size> mSupportedPreviewSizes;
+    private List<Camera.Size> mPreviewSizes;
+    private Camera.Size mForcedPreviewSize;
     private Camera.Size mPreviewSize;
     private Integer mPreviewFormat;
+
+    public static AbstractCameraActivity.Orientation getInitialOrientation() {
+        return initialOrientation;
+    }
+
+    public static void setInitialOrientation(AbstractCameraActivity.Orientation initialOrientation) {
+        CameraController.initialOrientation = initialOrientation;
+    }
 
     private CameraController(Context context, View layoutView, CameraCallback mCameraCallback, CameraType camID) {
 
@@ -55,8 +67,16 @@ public class CameraController {
         // TODO TYPE GPU???
         this.mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
-        // set default/initial orientation
-        this.mSurfaceOrientation = AbstractCameraActivity.Orientation.PORTRAIT;
+        // TODO get initial orientation
+        if (initialOrientation != null) {
+            Log.d(TAG, "Trigger initial orientation");
+
+            this.mSurfaceOrientation = initialOrientation;
+        } else {
+            // set orientation to portrait
+            this.mSurfaceOrientation = AbstractCameraActivity.Orientation.PORTRAIT;
+        }
+
 
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
@@ -76,6 +96,9 @@ public class CameraController {
         this.mCameraCallback = mCameraCallback;
 
         this.mSupportedPreviewSizes = null;
+        this.mForcedPreviewSize = null;
+        this.mPreviewSize = null;
+
         this.mPreviewFormat = null;
         this.mPreviewRunning = false;
     }
@@ -115,6 +138,7 @@ public class CameraController {
             mCamera.setPreviewCallback(mCameraCallback);
 
             mCamera.startPreview();
+            mPreviewRunning = true;
 
             mSurfaceView.requestLayout();
 
@@ -127,10 +151,11 @@ public class CameraController {
 
     public void configureCamera(AbstractCameraActivity.Orientation orientation, int width, int height) {
         Log.d(TAG, "configureCameraWithValues");
+        stopAndReleaseCamera();
         mSurfaceOrientation = orientation;
         mWindowWidth = width;
         mWindowHeight = height;
-        configureCamera();
+        startCamera();
     }
 
     public void configureCamera() {
@@ -147,14 +172,32 @@ public class CameraController {
 //                mPreviewFormat = mCameraParameter.getPreviewFormat();
 //            }
 
-            // TODO set params
 
-//            for(Camera.Size size: mSupportedPreviewSizes) {
-//                Log.d(TAG, "mSupportedPreviewSizes: x=" + size.width + "; y=" + size.height);
+            // TODO FIX PREVIEW SIZES and make the available via options menu
+            // configure preview size
+            mPreviewSize = null;
+            if (mForcedPreviewSize == null) {
+                mPreviewSize = getOptimalPreviewSize(mSupportedPreviewSizes, mWindowWidth, mWindowHeight);
+            } else {
+                mPreviewSize = mForcedPreviewSize;
+            }
+
+//            for (Camera.Size size : mSupportedPreviewSizes) {
+//
+//                double ratio = (double) size.height / size.width;
+//                Log.d(TAG, "mSupportedPreviewSize: x=" + size.width + "; y=" + size.height + "; ratio=" + ratio);
+//                if (opt != null) {
+//                    Log.d(TAG, "mOptimalPreviewSize: x=" + opt.width + "; y=" + opt.height + ";");
+//                } else {
+//                    Log.d(TAG, "mOptimalPreviewSize: null;");
+//                }
 //            }
 
-            Camera.Size cs = mSupportedPreviewSizes.get(0);
+            // TODO trigger resolution
+            Camera.Size cs = mSupportedPreviewSizes.get(2);
             mCameraParameter.setPreviewSize(cs.width, cs.height);
+            Log.d(TAG, "setPreviewSize mWindow: x=" + mWindowWidth + "; y=" + mWindowHeight);
+            Log.d(TAG, "setPreviewSize:cs x=" + cs.width + "; y=" + cs.height);
 
             Log.d(TAG, "DO ROTATION");
             switch (mSurfaceOrientation) {
@@ -196,12 +239,8 @@ public class CameraController {
 
         for (Camera.Size size : sizes) {
 
-            Log.d(TAG, "Size: x=" + size.width + "; y=" + size.height);
-
-            if (size.height != width) continue;
-            double ratio = (double) size.width / size.height;
-
-            Log.d(TAG, String.format("ratio=%s; targetRatio=%s", ratio, targetRatio));
+            double ratio = (double) size.height / size.width;
+            Log.d(TAG, "getOptimalPreviewSize " + String.format("x=%s; y=s; ratio=%s; targetRatio=%s", size.width, size.height, ratio, targetRatio));
 
             if (ratio <= targetRatio + ASPECT_TOLERANCE && ratio >= targetRatio - ASPECT_TOLERANCE) {
                 optimalSize = size;
