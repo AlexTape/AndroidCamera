@@ -1,29 +1,33 @@
-package de.alextape.androidcamera;
+package de.alextape.androidcamera.camera;
 
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.widget.ImageView;
+
+import java.io.IOException;
 
 /**
  * Created by thinker on 30.06.15.
  */
-public class CameraCallback implements SurfaceHolder.Callback,
-        Camera.PreviewCallback {
+public class CameraCallback implements SurfaceHolder.Callback, CameraCallbackInterface {
 
     private static final String TAG = CameraCallback.class.getSimpleName() + "ARGH";
-    private Bitmap mBitmap;
+
+    @Override
+    public void onPreviewFrame(byte[] data, Camera camera) {
+        // unused for this class
+    }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.d(TAG, "surfaceCreated");
-//        try {
-//            CameraController.getInstance().getCamera().setPreviewDisplay(holder);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            CameraController.getInstance().getCamera().setPreviewDisplay(holder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -38,16 +42,4 @@ public class CameraCallback implements SurfaceHolder.Callback,
         CameraController.getInstance().stopAndReleaseCamera();
     }
 
-    @Override
-    public void onPreviewFrame(byte[] data, Camera camera) {
-//        Log.d(TAG, "onPreviewFrame");
-        if (CameraController.getInstance().getPreviewFormat() != ImageFormat.NV21) {
-            Log.d(TAG, "wrong format");
-        } else {
-            if (data != null) {
-                camera.addCallbackBuffer(data);
-                new AsyncCameraTask().execute(data);
-            }
-        }
-    }
 }

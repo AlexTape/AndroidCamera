@@ -1,6 +1,5 @@
-package de.alextape.androidcamera;
+package de.alextape.androidcamera.camera;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.hardware.SensorManager;
@@ -13,19 +12,16 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 
+import de.alextape.androidcamera.R;
+
 /**
- * Created by thinker on 30.06.15.
+ * Created by thinker on 01.07.15.
  */
-public abstract class AbstractCameraActivity extends Activity {
+public class CameraOrientationActivity extends CameraActivity {
 
-    private static final String TAG = AbstractCameraActivity.class.getSimpleName() + "ARGH";
+    private static final String TAG = CameraOrientationActivity.class.getSimpleName();
 
-    private CameraController cameraController;
     private OrientationEventListener mOrientationEventListener;
-
-    public enum Orientation {
-        PORTRAIT, LANDSCAPE, REVERSE_PORTRAIT, REVERSE_LANDSCAPE
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,29 +29,12 @@ public abstract class AbstractCameraActivity extends Activity {
         // The activity is being created.
         Log.d(TAG, "onCreate");
 
-        // TODO remove this later
-        setContentView(R.layout.camera_layout);
-
-        // init camera
-        View layoutView = this.findViewById(R.id.layoutContainer);
-        cameraController = CameraController.create(this, layoutView, new CameraCallback(), CameraController.CameraType.BACK_CAMERA);
-
         mOrientationEventListener = new OrientationHelper(this);
         if (mOrientationEventListener.canDetectOrientation()) {
             mOrientationEventListener.enable();
         } else {
             finish();
         }
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // The activity is about to become visible.
-        Log.d(TAG, "onStart");
-
-        CameraController.getInstance().startCamera();
     }
 
     @Override
@@ -63,7 +42,9 @@ public abstract class AbstractCameraActivity extends Activity {
         super.onResume();
         // The activity has become visible (it is now "resumed").
         Log.d(TAG, "onResume");
-        //cameraController.startCamera();
+        if (mOrientationEventListener.canDetectOrientation()) {
+            mOrientationEventListener.enable();
+        }
     }
 
     @Override
@@ -71,7 +52,7 @@ public abstract class AbstractCameraActivity extends Activity {
         super.onPause();
         // Another activity is taking focus (this activity is about to be "paused").
         Log.d(TAG, "onPause");
-        //cameraController.stopCamera();
+        mOrientationEventListener.disable();
     }
 
     @Override
@@ -79,7 +60,7 @@ public abstract class AbstractCameraActivity extends Activity {
         super.onStop();
         // The activity is no longer visible (it is now "stopped")
         Log.d(TAG, "onStop");
-        //cameraController.stopCamera();
+        mOrientationEventListener.disable();
     }
 
     @Override
@@ -87,11 +68,8 @@ public abstract class AbstractCameraActivity extends Activity {
         super.onDestroy();
         // The activity is about to be destroyed.
         Log.d(TAG, "onDestroy");
-        cameraController.stopAndReleaseCamera();
-        cameraController.releaseView();
         mOrientationEventListener.disable();
     }
-
 
     public void onConfigurationChanged(Configuration newConfiguration) {
 
@@ -109,7 +87,7 @@ public abstract class AbstractCameraActivity extends Activity {
                         String.format("new width=%d; new height=%d; new orientation=" + orientation, view.getWidth(),
                                 view.getHeight()));
 
-                cameraController.configureCamera(orientation, view.getWidth(), view.getHeight());
+                CameraController.getInstance().configureCamera(orientation, view.getWidth(), view.getHeight());
 
                 view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -136,5 +114,30 @@ public abstract class AbstractCameraActivity extends Activity {
         return returnThis;
     }
 
+    private class OrientationHelper extends OrientationEventListener {
+
+        public OrientationHelper(Context context) {
+            super(context, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+
+        @Override
+        public void onOrientationChanged(int degree) {
+            // Fix undetected REVERSE_LANDSCAPE orientation when switching from LANDSCAPE to REVERSE_LANDSCAPE.
+            CameraActivity.Orientation orientation = CameraController.getInstance().getOrientation();
+            if (orientation == CameraActivity.Orientation.LANDSCAPE) {
+                if (degree < 180) {
+                    orientation = CameraActivity.Orientation.REVERSE_LANDSCAPE;
+                    CameraController.getInstance().rotateOrientation(orientation);
+                }
+            }
+            if (orientation == CameraActivity.Orientation.REVERSE_LANDSCAPE) {
+                if (degree > 180) {
+                    orientation = CameraActivity.Orientation.LANDSCAPE;
+                    CameraController.getInstance().rotateOrientation(orientation);
+                }
+            }
+        }
+
+    }
 
 }

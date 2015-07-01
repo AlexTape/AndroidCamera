@@ -1,4 +1,4 @@
-package de.alextape.androidcamera;
+package de.alextape.androidcamera.camera;
 
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -26,7 +26,7 @@ public class AsyncCameraTask extends AsyncTask<byte[], Void, Boolean> {
     @Override
     protected Boolean doInBackground(byte[]... datas) {
         // TODO Auto-generated method stub
-        //Log.i(TAG, "background process started");
+        Log.i(TAG, "background process started");
 
         byte[] data = datas[0];
 
@@ -48,13 +48,13 @@ public class AsyncCameraTask extends AsyncTask<byte[], Void, Boolean> {
                 total += (float) mTiming[i];
             }
             total /= mTiming.length;
-            if (Config.BENCHMARK) {
+            if (CameraConfig.BENCHMARK) {
                 Log.d(TAG, "time + " + String.valueOf(total));
             }
             mTimingSlot = 0;
         }
 
-        if (Config.BENCHMARK) {
+        if (CameraConfig.BENCHMARK) {
             Log.i(TAG, "processing time = " + String.valueOf(t2 - t1));
         }
 

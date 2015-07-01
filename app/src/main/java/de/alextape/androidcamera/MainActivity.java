@@ -1,17 +1,16 @@
 package de.alextape.androidcamera;
 
-import android.app.Activity;
-import android.content.pm.ActivityInfo;
-import android.hardware.Sensor;
 import android.os.Bundle;
-import android.util.Log;
+
+import de.alextape.androidcamera.camera.CameraActivity;
+import de.alextape.androidcamera.camera.CameraOrientationActivity;
 
 /**
  * Created by thinker on 30.06.15.
  */
-public class MainActivity extends AbstractCameraActivity {
+public class MainActivity extends CameraOrientationActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName() + "ARGH";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

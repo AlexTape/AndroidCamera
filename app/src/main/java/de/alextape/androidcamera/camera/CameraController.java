@@ -1,4 +1,4 @@
-package de.alextape.androidcamera;
+package de.alextape.androidcamera.camera;
 
 import android.content.Context;
 import android.graphics.Point;
@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import java.io.IOException;
 import java.util.List;
 
+import de.alextape.androidcamera.R;
+
 /**
  * Created by thinker on 30.06.15.
  */
@@ -23,7 +25,7 @@ public class CameraController {
 
     private static CameraController _instance = null;
 
-    private static AbstractCameraActivity.Orientation initialOrientation = null;
+    private static CameraActivity.Orientation initialOrientation = null;
 
     private ImageView imageView;
 
@@ -45,28 +47,28 @@ public class CameraController {
     private CameraType mCameraType;
     private Camera mCamera;
     private Camera.Parameters mCameraParameter;
-    private CameraCallback mCameraCallback;
+    private CameraCallbackInterface mCameraCallback;
 
     private SurfaceView mSurfaceView;
     private SurfaceHolder mSurfaceHolder;
+
+    public boolean ismPreviewRunning() {
+        return mPreviewRunning;
+    }
 
     private boolean mPreviewRunning;
 
     private Integer mWindowWidth;
     private Integer mWindowHeight;
 
-    private AbstractCameraActivity.Orientation mSurfaceOrientation;
+    private CameraActivity.Orientation mSurfaceOrientation;
     private List<Camera.Size> mSupportedPreviewSizes;
     private List<Camera.Size> mPreviewSizes;
     private Camera.Size mForcedPreviewSize;
     private Camera.Size mPreviewSize;
     private Integer mPreviewFormat;
 
-    public static AbstractCameraActivity.Orientation getInitialOrientation() {
-        return initialOrientation;
-    }
-
-    public static void setInitialOrientation(AbstractCameraActivity.Orientation initialOrientation) {
+    public static void setInitialOrientation(CameraActivity.Orientation initialOrientation) {
         CameraController.initialOrientation = initialOrientation;
     }
 
@@ -90,7 +92,7 @@ public class CameraController {
             this.mSurfaceOrientation = initialOrientation;
         } else {
             // set orientation to portrait
-            this.mSurfaceOrientation = AbstractCameraActivity.Orientation.PORTRAIT;
+            this.mSurfaceOrientation = CameraActivity.Orientation.PORTRAIT;
         }
 
 
@@ -151,7 +153,10 @@ public class CameraController {
             configureCamera();
 
             mCamera.setPreviewDisplay(mSurfaceHolder);
-            mCamera.setPreviewCallback(mCameraCallback);
+
+            if (CameraConfig.ASYNC_CAMERA) {
+                mCamera.setPreviewCallback((AsyncCameraCallback) mCameraCallback);
+            }
 
             mCamera.startPreview();
             mPreviewRunning = true;
@@ -165,7 +170,7 @@ public class CameraController {
         }
     }
 
-    public void configureCamera(AbstractCameraActivity.Orientation orientation, int width, int height) {
+    public void configureCamera(CameraActivity.Orientation orientation, int width, int height) {
         Log.d(TAG, "configureCameraWithValues");
         stopAndReleaseCamera();
         mSurfaceOrientation = orientation;
@@ -233,7 +238,7 @@ public class CameraController {
         }
     }
 
-    public void rotateOrientation(AbstractCameraActivity.Orientation orientation) {
+    public void rotateOrientation(CameraActivity.Orientation orientation) {
         Log.d(TAG, "configureCameraWithValues");
         mSurfaceOrientation = orientation;
         rotateOrientation();
@@ -296,13 +301,15 @@ public class CameraController {
     public void stopAndReleaseCamera() {
         Log.d(TAG, "stopAndReleaseCamera");
         if (mCamera != null) {
-            mPreviewRunning = false;
             mCamera.setPreviewCallback(null);
             mCamera.stopPreview();
             mCamera.release();
             mCamera = null;
+            mPreviewRunning = false;
         }
     }
+
+
 
     public void releaseView() {
         Log.d(TAG, "releaseView");
@@ -319,11 +326,11 @@ public class CameraController {
         return mWindowHeight;
     }
 
-    public AbstractCameraActivity.Orientation getOrientation() {
+    public CameraActivity.Orientation getOrientation() {
         return mSurfaceOrientation;
     }
 
-    public void setOrientation(AbstractCameraActivity.Orientation orientation) {
+    public void setOrientation(CameraActivity.Orientation orientation) {
         this.mSurfaceOrientation = orientation;
     }
 }
