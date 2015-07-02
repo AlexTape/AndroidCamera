@@ -16,7 +16,8 @@ import de.alextape.androidcamera.camera.CameraController;
 import de.alextape.androidcamera.camera.callbacks.AutoFocusCallback;
 
 /**
- * Created by thinker on 02.07.15.
+ * This class extends the orientation activity to get a centralized location
+ * for the implementation of supported camera features.
  */
 public class CameraFocusActivity extends CameraOrientationActivity implements View.OnTouchListener {
 
@@ -36,10 +37,7 @@ public class CameraFocusActivity extends CameraOrientationActivity implements Vi
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         Log.d(TAG, "onTouch");
-
-        setFocusMode(1);
-
-        Camera.Parameters parameters = CameraController.getInstance().getCamera().getParameters();
+        Camera.Parameters parameters = CameraController.getInstance().getCameraParameter();
         if (Camera.Parameters.FOCUS_MODE_AUTO == parameters.getFocusMode()) {
             Log.d(TAG, "Focus Mode == AUTO");
             focusOnTouch(event);
@@ -78,7 +76,7 @@ public class CameraFocusActivity extends CameraOrientationActivity implements Vi
 
         Log.d(TAG, focusRect.toString());
 
-        Camera.Parameters parameters = CameraController.getInstance().getCamera().getParameters();
+        Camera.Parameters parameters = CameraController.getInstance().getCameraParameter();
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
 
         if (parameters.getMaxNumFocusAreas() > 0) {
@@ -95,13 +93,13 @@ public class CameraFocusActivity extends CameraOrientationActivity implements Vi
             parameters.setMeteringAreas(meteringAreas);
         }
 
-        CameraController.getInstance().getCamera().setParameters(parameters);
-        CameraController.getInstance().getCamera().autoFocus(new AutoFocusCallback());
+        CameraController.getInstance().setCameraParameter(parameters);
+        CameraController.getInstance().setAutoFocusCallback(new AutoFocusCallback());
     }
 
     public Camera.Size getResolution() {
         Log.d(TAG, "getResolution");
-        Camera.Parameters params = CameraController.getInstance().getCamera().getParameters();
+        Camera.Parameters params = CameraController.getInstance().getCameraParameter();
         Camera.Size s = params.getPreviewSize();
         return s;
     }

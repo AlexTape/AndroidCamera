@@ -4,7 +4,7 @@ import android.hardware.Camera;
 import android.util.Log;
 
 /**
- * Created by thinker on 02.07.15.
+ * This callback is registered to finished auto focus events.
  */
 public class AutoFocusCallback implements Camera.AutoFocusCallback {
 

@@ -17,21 +17,24 @@ import java.util.List;
 import de.alextape.androidcamera.R;
 import de.alextape.androidcamera.camera.activities.CameraOrientationActivity;
 import de.alextape.androidcamera.camera.callbacks.AsyncCameraCallback;
+import de.alextape.androidcamera.camera.callbacks.AutoFocusCallback;
 import de.alextape.androidcamera.camera.callbacks.CameraCallback;
 import de.alextape.androidcamera.camera.interfaces.CameraCallbackInterface;
+import de.alextape.androidcamera.camera.interfaces.CameraInitializedCallback;
 
 /**
- * Created by thinker on 30.06.15.
+ * This class represents the camera implementation as a singleton to be accessible from
+ * any point of your application.
  */
 public class CameraController {
 
     private static final String TAG = CameraController.class.getSimpleName();
-
     private static CameraController _instance = null;
-
     private static CameraOrientationActivity.Orientation initialOrientation = null;
+
     public int parameterHeight;
     public int parameterWidth;
+
     private ImageView imageView;
     private Camera mCamera;
     private Camera.Parameters mCameraParameter;
@@ -47,7 +50,8 @@ public class CameraController {
     private Camera.Size mForcedPreviewSize;
     private Camera.Size mPreviewSize;
     private Integer mPreviewFormat;
-    private CameraReleaseCallback mCameraReleaseCallback;
+    private CameraInitializedCallback mCameraInitializedCallback;
+
     private CameraController(Context context, View layoutView, CameraCallback mCameraCallback) {
 
         Log.d(TAG, "CameraController");
@@ -101,7 +105,6 @@ public class CameraController {
     }
 
     public static CameraController getInstance() {
-        //Log.d(TAG, "getInstance");
         return _instance;
     }
 
@@ -117,27 +120,21 @@ public class CameraController {
 
     public void setCameraParameter(Camera.Parameters mCameraParameter) {
         this.mCameraParameter = mCameraParameter;
+        if (mPreviewRunning) {
+            mCamera.stopPreview();
+            mCamera.setParameters(mCameraParameter);
+            mCamera.startPreview();
+        } else {
+            mCamera.setParameters(mCameraParameter);
+        }
     }
 
-    public void setOnCameraReleaseListener(CameraReleaseCallback releaseListener) {
-        mCameraReleaseCallback = releaseListener;
+    public void setOnCameraInitializedListener(CameraInitializedCallback releaseListener) {
+        mCameraInitializedCallback = releaseListener;
     }
 
     public ImageView getImageView() {
         return imageView;
-    }
-
-    public void setImageView(ImageView imageView) {
-        this.imageView = imageView;
-    }
-
-    public boolean isPreviewRunning() {
-        return mPreviewRunning;
-    }
-
-    public Camera getCamera() {
-        //Log.d(TAG, "getCamera");
-        return mCamera;
     }
 
     public void startCamera() {
@@ -166,11 +163,9 @@ public class CameraController {
 
             mSurfaceView.requestLayout();
 
-
-            if (mCameraReleaseCallback != null) {
-                mCameraReleaseCallback.onReleaseCamera();
+            if (mCameraInitializedCallback != null) {
+                mCameraInitializedCallback.onCameraIsInitialized();
             }
-
 
         } catch (IOException e) {
             mCamera.release();
@@ -198,15 +193,12 @@ public class CameraController {
 
             mCameraParameter = mCamera.getParameters();
 
-//            mCameraParameter.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-
             // TODO get optimal size
             mSupportedPreviewSizes = mCameraParameter.getSupportedPreviewSizes();
 
 //            if (mSupportedPreviewSizes != null) {
 //                mPreviewSize = getOptimalPreviewSize(mSupportedPreviewSizes, mWindowWidth, mWindowHeight);
 //                mCameraParameter.setPreviewSize(mWindowWidth, mWindowHeight);
-//
 //            }
 
             mPreviewFormat = mCameraParameter.getPreviewFormat();
@@ -221,7 +213,6 @@ public class CameraController {
             }
 
 //            for (Camera.Size size : mSupportedPreviewSizes) {
-//
 //                double ratio = (double) size.height / size.width;
 //                Log.d(TAG, "mSupportedPreviewSize: x=" + size.width + "; y=" + size.height + "; ratio=" + ratio);
 //                if (opt != null) {
@@ -291,7 +282,7 @@ public class CameraController {
         for (Camera.Size size : sizes) {
 
             double ratio = (double) size.height / size.width;
-            Log.d(TAG, "getOptimalPreviewSize " + String.format("x=%s; y=s; ratio=%s; targetRatio=%s", size.width, size.height, ratio, targetRatio));
+            Log.d(TAG, "getOptimalPreviewSize " + String.format("x=%s; y=%s; ratio=%s; targetRatio=%s", size.width, size.height, ratio, targetRatio));
 
             if (ratio <= targetRatio + ASPECT_TOLERANCE && ratio >= targetRatio - ASPECT_TOLERANCE) {
                 optimalSize = size;
@@ -340,17 +331,38 @@ public class CameraController {
 
     public void setFlashMode(String supportedFlashMode) {
         Log.d(TAG, "setFlashMode=" + supportedFlashMode);
-        mCamera.stopPreview();
         mCameraParameter.setFlashMode(supportedFlashMode);
-        mCamera.setParameters(mCameraParameter);
-        mCamera.startPreview();
+        if (mPreviewRunning) {
+            mCamera.stopPreview();
+            mCamera.setParameters(mCameraParameter);
+            mCamera.startPreview();
+        } else {
+            mCamera.setParameters(mCameraParameter);
+        }
+    }
+
+    public void setAutoFocusCallback(AutoFocusCallback autoFocusCallback) {
+        mCamera.autoFocus(autoFocusCallback);
+    }
+
+    public void setPreviewDisplay(SurfaceHolder holder) {
+        try {
+            mCamera.setPreviewDisplay(holder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setCameraCallbackBuffer(byte[] data) {
+        if (mCamera != null) {
+            mCamera.addCallbackBuffer(data);
+        } else {
+            Log.d(TAG, "skipped addCallbackBuffer (mCamera==null)");
+        }
     }
 
     public enum CameraType {
         FRONT_CAMERA, BACK_CAMERA
     }
 
-    public interface CameraReleaseCallback {
-        void onReleaseCamera();
-    }
 }

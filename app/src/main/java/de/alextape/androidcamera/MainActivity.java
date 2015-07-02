@@ -3,13 +3,12 @@ package de.alextape.androidcamera;
 import android.os.Bundle;
 import android.util.Log;
 
-import de.alextape.androidcamera.camera.Camera;
-import de.alextape.androidcamera.camera.CameraController;
+import de.alextape.androidcamera.camera.HardwareCamera;
 
 /**
- * This is a basic MainActivity to get a Hook how to implement the Camera easily.
+ * This is a demo how to implement the camera easily.
  */
-public class MainActivity extends Camera implements CameraController.CameraReleaseCallback {
+public class MainActivity extends HardwareCamera {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -18,8 +17,6 @@ public class MainActivity extends Camera implements CameraController.CameraRelea
         super.onCreate(savedInstanceState);
         // The activity is being created.
         Log.d(TAG, "onCreate");
-
-        CameraController.getInstance().setOnCameraReleaseListener(this);
     }
 
     @Override
@@ -57,16 +54,37 @@ public class MainActivity extends Camera implements CameraController.CameraRelea
         Log.d(TAG, "onDestroy");
     }
 
-
+    /**
+     * This method is used to gather options passed by a user interactions.
+     * e.g. Focus mode, Flash mode..
+     */
     @Override
-    public void onReleaseCamera() {
+    public void onCameraInitialized() {
         Log.d(TAG, "onReleaseCamera");
+
+        Integer mode = null;
+        String result = null;
+
         // Return a list of Available Flash modes
-//                getFlashOptions();
-        setFlashMode(1);
+        String[] flashOptions = getFlashOptions();
+        // pass index of option to setFlashMode(int)
+        result = setFlashMode(1);
+        if (result == null) {
+            Log.d(TAG, result);
+        } else {
+            Log.d(TAG, "Success");
+        }
 
         // Returns a list of available Focus modes
-//                getFocusOptions();
-        setFocusMode(5);
+        String[] focusOptions = getFlashOptions();
+        // pass index of option to setFocusMode(int)
+        result = setFlashMode(1);
+        if (result == null) {
+            Log.d(TAG, result);
+        } else {
+            Log.d(TAG, "Success");
+        }
+
     }
+
 }
