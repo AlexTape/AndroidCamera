@@ -1,7 +1,5 @@
 package de.alextape.androidcamera.camera;
 
-import android.hardware.*;
-
 /**
  * Created by thinker on 01.07.15.
  */

@@ -47,6 +47,7 @@ public class CameraController {
     private Camera.Size mForcedPreviewSize;
     private Camera.Size mPreviewSize;
     private Integer mPreviewFormat;
+    private CameraReleaseCallback mCameraReleaseCallback;
     private CameraController(Context context, View layoutView, CameraCallback mCameraCallback) {
 
         Log.d(TAG, "CameraController");
@@ -110,6 +111,18 @@ public class CameraController {
         return _instance;
     }
 
+    public Camera.Parameters getCameraParameter() {
+        return mCameraParameter;
+    }
+
+    public void setCameraParameter(Camera.Parameters mCameraParameter) {
+        this.mCameraParameter = mCameraParameter;
+    }
+
+    public void setOnCameraReleaseListener(CameraReleaseCallback releaseListener) {
+        mCameraReleaseCallback = releaseListener;
+    }
+
     public ImageView getImageView() {
         return imageView;
     }
@@ -153,6 +166,12 @@ public class CameraController {
 
             mSurfaceView.requestLayout();
 
+
+            if (mCameraReleaseCallback != null) {
+                mCameraReleaseCallback.onReleaseCamera();
+            }
+
+
         } catch (IOException e) {
             mCamera.release();
             mCamera = null;
@@ -178,6 +197,8 @@ public class CameraController {
         if (mCamera != null) {
 
             mCameraParameter = mCamera.getParameters();
+
+//            mCameraParameter.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
 
             // TODO get optimal size
             mSupportedPreviewSizes = mCameraParameter.getSupportedPreviewSizes();
@@ -279,14 +300,6 @@ public class CameraController {
         return optimalSize;
     }
 
-    public void stopCamera() {
-        Log.d(TAG, "stopCamera");
-        if (mCamera != null) {
-            mCamera.stopPreview();
-            mCamera.release();
-        }
-    }
-
     public void stopAndReleaseCamera() {
         Log.d(TAG, "stopAndReleaseCamera");
         if (mCamera != null) {
@@ -305,23 +318,39 @@ public class CameraController {
         }
     }
 
-    public Integer getWindowWidth() {
-        return mWindowWidth;
-    }
-
-    public Integer getWindowHeight() {
-        return mWindowHeight;
-    }
-
     public CameraOrientationActivity.Orientation getOrientation() {
         return mSurfaceOrientation;
     }
 
-    public void setOrientation(CameraOrientationActivity.Orientation orientation) {
-        this.mSurfaceOrientation = orientation;
+    public List<String> getSupportedFocusModes() {
+        return mCameraParameter.getSupportedFocusModes();
+    }
+
+    public void setFocusMode(String supportedFocusMode) {
+        Log.d(TAG, "setFocusMode=" + supportedFocusMode);
+        mCamera.stopPreview();
+        mCameraParameter.setFocusMode(supportedFocusMode);
+        mCamera.setParameters(mCameraParameter);
+        mCamera.startPreview();
+    }
+
+    public List<String> getSupportedFlashModes() {
+        return mCameraParameter.getSupportedFlashModes();
+    }
+
+    public void setFlashMode(String supportedFlashMode) {
+        Log.d(TAG, "setFlashMode=" + supportedFlashMode);
+        mCamera.stopPreview();
+        mCameraParameter.setFlashMode(supportedFlashMode);
+        mCamera.setParameters(mCameraParameter);
+        mCamera.startPreview();
     }
 
     public enum CameraType {
         FRONT_CAMERA, BACK_CAMERA
+    }
+
+    public interface CameraReleaseCallback {
+        void onReleaseCamera();
     }
 }

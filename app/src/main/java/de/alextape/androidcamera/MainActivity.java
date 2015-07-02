@@ -4,11 +4,12 @@ import android.os.Bundle;
 import android.util.Log;
 
 import de.alextape.androidcamera.camera.Camera;
+import de.alextape.androidcamera.camera.CameraController;
 
 /**
  * This is a basic MainActivity to get a Hook how to implement the Camera easily.
  */
-public class MainActivity extends Camera {
+public class MainActivity extends Camera implements CameraController.CameraReleaseCallback {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -17,6 +18,8 @@ public class MainActivity extends Camera {
         super.onCreate(savedInstanceState);
         // The activity is being created.
         Log.d(TAG, "onCreate");
+
+        CameraController.getInstance().setOnCameraReleaseListener(this);
     }
 
     @Override
@@ -55,4 +58,15 @@ public class MainActivity extends Camera {
     }
 
 
+    @Override
+    public void onReleaseCamera() {
+        Log.d(TAG, "onReleaseCamera");
+        // Return a list of Available Flash modes
+//                getFlashOptions();
+        setFlashMode(1);
+
+        // Returns a list of available Focus modes
+//                getFocusOptions();
+        setFocusMode(5);
+    }
 }

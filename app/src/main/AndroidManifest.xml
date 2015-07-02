@@ -2,9 +2,6 @@
 <manifest package="de.alextape.androidcamera"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-feature android:name="android.hardware.camera"/>
-
     <application
         android:name=".camera.activities.CameraApplication"
         android:allowBackup="true"
@@ -22,5 +19,14 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="true"/>
+
+    <permission android:name="android.permission.flashlight"
+                android:permissionGroup="android.permission-group.HARDWARE_CONTROLS"
+                android:protectionLevel="normal" />
 
 </manifest>
