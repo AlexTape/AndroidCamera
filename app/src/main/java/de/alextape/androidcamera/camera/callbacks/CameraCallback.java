@@ -1,12 +1,13 @@
-package de.alextape.androidcamera.camera;
+package de.alextape.androidcamera.camera.callbacks;
 
-import android.graphics.Bitmap;
-import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
+
+import de.alextape.androidcamera.camera.CameraController;
+import de.alextape.androidcamera.camera.interfaces.CameraCallbackInterface;
 
 /**
  * Created by thinker on 30.06.15.

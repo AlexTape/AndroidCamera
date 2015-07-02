@@ -15,6 +15,10 @@ import java.io.IOException;
 import java.util.List;
 
 import de.alextape.androidcamera.R;
+import de.alextape.androidcamera.camera.activities.CameraOrientationActivity;
+import de.alextape.androidcamera.camera.callbacks.AsyncCameraCallback;
+import de.alextape.androidcamera.camera.callbacks.CameraCallback;
+import de.alextape.androidcamera.camera.interfaces.CameraCallbackInterface;
 
 /**
  * Created by thinker on 30.06.15.
@@ -26,53 +30,24 @@ public class CameraController {
     private static CameraController _instance = null;
 
     private static CameraOrientationActivity.Orientation initialOrientation = null;
-
-    private ImageView imageView;
-
-    public ImageView getImageView() {
-        return imageView;
-    }
-
-    public void setImageView(ImageView imageView) {
-        this.imageView = imageView;
-    }
-
     public int parameterHeight;
     public int parameterWidth;
-
-    public enum CameraType {
-        FRONT_CAMERA, BACK_CAMERA
-    }
-
-    private CameraType mCameraType;
+    private ImageView imageView;
     private Camera mCamera;
     private Camera.Parameters mCameraParameter;
     private CameraCallbackInterface mCameraCallback;
-
     private SurfaceView mSurfaceView;
     private SurfaceHolder mSurfaceHolder;
-
-    public boolean ismPreviewRunning() {
-        return mPreviewRunning;
-    }
-
     private boolean mPreviewRunning;
-
     private Integer mWindowWidth;
     private Integer mWindowHeight;
-
     private CameraOrientationActivity.Orientation mSurfaceOrientation;
     private List<Camera.Size> mSupportedPreviewSizes;
     private List<Camera.Size> mPreviewSizes;
     private Camera.Size mForcedPreviewSize;
     private Camera.Size mPreviewSize;
     private Integer mPreviewFormat;
-
-    public static void setInitialOrientation(CameraOrientationActivity.Orientation initialOrientation) {
-        CameraController.initialOrientation = initialOrientation;
-    }
-
-    private CameraController(Context context, View layoutView, CameraCallback mCameraCallback, CameraType camID) {
+    private CameraController(Context context, View layoutView, CameraCallback mCameraCallback) {
 
         Log.d(TAG, "CameraController");
 
@@ -108,7 +83,6 @@ public class CameraController {
                 String.format("width=%d; height=%d;", mWindowWidth,
                         mWindowHeight));
 
-        this.mCameraType = camID;
         this.mCamera = null;
         this.mCameraParameter = null;
         this.mCameraCallback = mCameraCallback;
@@ -121,15 +95,31 @@ public class CameraController {
         this.mPreviewRunning = false;
     }
 
+    public static void setInitialOrientation(CameraOrientationActivity.Orientation initialOrientation) {
+        CameraController.initialOrientation = initialOrientation;
+    }
+
     public static CameraController getInstance() {
         //Log.d(TAG, "getInstance");
         return _instance;
     }
 
-    public static CameraController create(Context context, View layoutView, CameraCallback cameraCallback, CameraType cameraType) {
+    public static CameraController create(Context context, View layoutView, CameraCallback cameraCallback) {
         Log.d(TAG, "create");
-        _instance = new CameraController(context, layoutView, cameraCallback, cameraType);
+        _instance = new CameraController(context, layoutView, cameraCallback);
         return _instance;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
+    }
+
+    public boolean isPreviewRunning() {
+        return mPreviewRunning;
     }
 
     public Camera getCamera() {
@@ -144,7 +134,7 @@ public class CameraController {
 
         try {
 
-            if (mCameraType == CameraType.FRONT_CAMERA) {
+            if (CameraConfig.CAMERA == CameraType.FRONT_CAMERA) {
                 mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
             } else {
                 mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
@@ -199,7 +189,6 @@ public class CameraController {
 //            }
 
             mPreviewFormat = mCameraParameter.getPreviewFormat();
-
 
             // TODO FIX PREVIEW SIZES and make the available via options menu
             // configure preview size
@@ -309,8 +298,6 @@ public class CameraController {
         }
     }
 
-
-
     public void releaseView() {
         Log.d(TAG, "releaseView");
         if (mSurfaceView != null) {
@@ -332,5 +319,9 @@ public class CameraController {
 
     public void setOrientation(CameraOrientationActivity.Orientation orientation) {
         this.mSurfaceOrientation = orientation;
+    }
+
+    public enum CameraType {
+        FRONT_CAMERA, BACK_CAMERA
     }
 }

@@ -1,17 +1,19 @@
-package de.alextape.androidcamera.camera;
+package de.alextape.androidcamera.camera.activities;
 
-import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import de.alextape.androidcamera.R;
+import de.alextape.androidcamera.camera.CameraConfig;
+import de.alextape.androidcamera.camera.CameraController;
+import de.alextape.androidcamera.camera.callbacks.AsyncCameraCallback;
+import de.alextape.androidcamera.camera.callbacks.CameraCallback;
 
 /**
  * Created by thinker on 30.06.15.
  */
-public abstract class CameraActivity extends CameraRootActivity {
+public abstract class CameraActivity extends CameraLayoutActivity {
 
     private static final String TAG = CameraActivity.class.getSimpleName();
 
@@ -27,9 +29,9 @@ public abstract class CameraActivity extends CameraRootActivity {
         // init CameraController
 
         if (CameraConfig.ASYNC_CAMERA) {
-            CameraController.create(this, layoutView, new AsyncCameraCallback(), CameraController.CameraType.BACK_CAMERA);
+            CameraController.create(this, layoutView, new AsyncCameraCallback());
         } else {
-            CameraController.create(this, layoutView, new CameraCallback(), CameraController.CameraType.BACK_CAMERA);
+            CameraController.create(this, layoutView, new CameraCallback());
         }
 
     }

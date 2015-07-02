@@ -1,23 +1,44 @@
-package de.alextape.androidcamera.camera;
+package de.alextape.androidcamera.camera.activities;
 
-import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.hardware.Camera;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.alextape.androidcamera.R;
+import de.alextape.androidcamera.camera.CameraController;
+import de.alextape.androidcamera.camera.callbacks.AutoFocusCallback;
+
 /**
  * Created by thinker on 02.07.15.
  */
-public class CameraFeatures implements Camera.AutoFocusCallback {
+public class CameraFocusActivity extends CameraOrientationActivity implements View.OnTouchListener {
 
-    private static final String TAG = CameraFeatures.class.getSimpleName();
+    private static final String TAG = CameraFocusActivity.class.getSimpleName();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // The activity is being created.
+        Log.d(TAG, "onCreate");
+
+        // get view for onTouch()
+        View layoutView = this.findViewById(R.id.layoutContainer);
+        layoutView.setOnTouchListener(this);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        Log.d(TAG, "MainActivity onTouch");
+        //cameraFeatures.focusOnTouch(event);
+        return true;
+    }
 
     public String[] getFocusOptions() {
         String[] options = new String[7];
@@ -66,7 +87,7 @@ public class CameraFeatures implements Camera.AutoFocusCallback {
         }
 
         CameraController.getInstance().getCamera().setParameters(parameters);
-        CameraController.getInstance().getCamera().autoFocus(this);
+        CameraController.getInstance().getCamera().autoFocus(new AutoFocusCallback());
     }
 
     public Camera.Size getResolution() {
@@ -207,8 +228,4 @@ public class CameraFeatures implements Camera.AutoFocusCallback {
         return returnThis;
     }
 
-    @Override
-    public void onAutoFocus(boolean success, Camera camera) {
-        Log.d(TAG, "onAutoFocus state:" + success);
-    }
 }

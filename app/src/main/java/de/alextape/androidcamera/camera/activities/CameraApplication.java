@@ -1,4 +1,4 @@
-package de.alextape.androidcamera.camera;
+package de.alextape.androidcamera.camera.activities;
 
 import android.app.Application;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
+
+import de.alextape.androidcamera.camera.CameraController;
 
 /**
  * Created by thinker on 01.07.15.
@@ -44,4 +46,5 @@ public class CameraApplication extends Application {
         super.onLowMemory();
         throw new OutOfMemoryError("Low Memory");
     }
+
 }

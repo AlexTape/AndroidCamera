@@ -1,7 +1,6 @@
-package de.alextape.androidcamera.camera;
+package de.alextape.androidcamera.camera.interfaces;
 
 import android.hardware.Camera;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 /**
@@ -10,8 +9,11 @@ import android.view.SurfaceHolder;
 public interface CameraCallbackInterface {
 
     public void onPreviewFrame(byte[] data, Camera camera);
+
     public void surfaceCreated(SurfaceHolder holder);
+
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height);
+
     public void surfaceDestroyed(SurfaceHolder holder);
 
 }

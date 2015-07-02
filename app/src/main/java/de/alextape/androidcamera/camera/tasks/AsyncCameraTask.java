@@ -1,10 +1,13 @@
-package de.alextape.androidcamera.camera;
+package de.alextape.androidcamera.camera.tasks;
 
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
+
+import de.alextape.androidcamera.camera.CameraConfig;
+import de.alextape.androidcamera.camera.CameraController;
 
 /**
  * Created by thinker on 01.07.15.

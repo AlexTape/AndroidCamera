@@ -1,13 +1,11 @@
-package de.alextape.androidcamera.camera;
+package de.alextape.androidcamera.camera.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
-import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.View;
@@ -15,19 +13,16 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 
 import de.alextape.androidcamera.R;
+import de.alextape.androidcamera.camera.CameraController;
 
 /**
  * Created by thinker on 01.07.15.
  */
-public class CameraOrientationActivity extends CameraActivity implements View.OnTouchListener {
+public class CameraOrientationActivity extends CameraActivity {
 
     private static final String TAG = CameraOrientationActivity.class.getSimpleName();
 
     private OrientationEventListener mOrientationEventListener;
-
-    public enum Orientation {
-        PORTRAIT, LANDSCAPE, REVERSE_PORTRAIT, REVERSE_LANDSCAPE
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,10 +36,6 @@ public class CameraOrientationActivity extends CameraActivity implements View.On
         } else {
             finish();
         }
-
-        // get view for CameraFeatures onTouch()
-        View layoutView = this.findViewById(R.id.layoutContainer);
-        layoutView.setOnTouchListener(this);
     }
 
     @Override
@@ -81,14 +72,6 @@ public class CameraOrientationActivity extends CameraActivity implements View.On
         mOrientationEventListener.disable();
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        Log.d(TAG, "MainActivity onTouch");
-        //cameraFeatures.focusOnTouch(event);
-        return true;
-    }
-
-
     public void onConfigurationChanged(Configuration newConfiguration) {
 
         super.onConfigurationChanged(newConfiguration);
@@ -114,7 +97,7 @@ public class CameraOrientationActivity extends CameraActivity implements View.On
 
     private Orientation getScreenOrientation() {
         Orientation returnThis = null;
-        final Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        final Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
         switch (display.getRotation()) {
             case Surface.ROTATION_0:
                 returnThis = Orientation.PORTRAIT;
@@ -130,6 +113,10 @@ public class CameraOrientationActivity extends CameraActivity implements View.On
                 break;
         }
         return returnThis;
+    }
+
+    public enum Orientation {
+        PORTRAIT, LANDSCAPE, REVERSE_PORTRAIT, REVERSE_LANDSCAPE
     }
 
     private class OrientationHelper extends OrientationEventListener {

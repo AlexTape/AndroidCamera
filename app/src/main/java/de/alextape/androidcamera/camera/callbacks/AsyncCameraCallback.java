@@ -1,8 +1,11 @@
-package de.alextape.androidcamera.camera;
+package de.alextape.androidcamera.camera.callbacks;
 
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.util.Log;
+
+import de.alextape.androidcamera.camera.CameraController;
+import de.alextape.androidcamera.camera.tasks.AsyncCameraTask;
 
 /**
  * Created by thinker on 01.07.15.
