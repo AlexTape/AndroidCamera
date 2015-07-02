@@ -8,7 +8,8 @@ import de.alextape.androidcamera.camera.CameraController;
 import de.alextape.androidcamera.camera.tasks.AsyncCameraTask;
 
 /**
- * Created by thinker on 01.07.15.
+ * This callback delegates incoming frames to AsyncCameraTask. Furthermore this
+ * class is responsible for data integrity.
  */
 public class AsyncCameraCallback extends CameraCallback implements Camera.PreviewCallback {
 
@@ -21,7 +22,6 @@ public class AsyncCameraCallback extends CameraCallback implements Camera.Previe
         if (CameraController.getInstance().getPreviewFormat() != ImageFormat.NV21) {
 
             Log.d(TAG, "wrong format");
-
         } else {
 
             if (data != null) {

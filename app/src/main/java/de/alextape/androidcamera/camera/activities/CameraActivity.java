@@ -11,7 +11,7 @@ import de.alextape.androidcamera.camera.callbacks.AsyncCameraCallback;
 import de.alextape.androidcamera.camera.callbacks.CameraCallback;
 
 /**
- * Created by thinker on 30.06.15.
+ * This class implements the camera lifecycle.
  */
 public abstract class CameraActivity extends CameraLayoutActivity {
 
@@ -27,13 +27,11 @@ public abstract class CameraActivity extends CameraLayoutActivity {
         View layoutView = this.findViewById(R.id.layoutContainer);
 
         // init CameraController
-
         if (CameraConfig.ASYNC_CAMERA) {
             CameraController.create(this, layoutView, new AsyncCameraCallback());
         } else {
             CameraController.create(this, layoutView, new CameraCallback());
         }
-
     }
 
     @Override
@@ -77,6 +75,5 @@ public abstract class CameraActivity extends CameraLayoutActivity {
         cameraController.stopAndReleaseCamera();
         cameraController.releaseView();
     }
-
 
 }

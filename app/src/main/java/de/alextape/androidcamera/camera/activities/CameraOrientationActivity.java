@@ -16,7 +16,7 @@ import de.alextape.androidcamera.R;
 import de.alextape.androidcamera.camera.CameraController;
 
 /**
- * Created by thinker on 01.07.15.
+ * This class implements robust orientation changes for the camera activity.
  */
 public class CameraOrientationActivity extends CameraActivity {
 
@@ -130,13 +130,13 @@ public class CameraOrientationActivity extends CameraActivity {
             // Fix undetected REVERSE_LANDSCAPE orientation when switching from LANDSCAPE to REVERSE_LANDSCAPE.
             CameraOrientationActivity.Orientation orientation = CameraController.getInstance().getOrientation();
             if (orientation == CameraOrientationActivity.Orientation.LANDSCAPE) {
-                if (degree < 180) {
+                if (degree < 170) {
                     orientation = CameraOrientationActivity.Orientation.REVERSE_LANDSCAPE;
                     CameraController.getInstance().rotateOrientation(orientation);
                 }
             }
             if (orientation == CameraOrientationActivity.Orientation.REVERSE_LANDSCAPE) {
-                if (degree > 180) {
+                if (degree > 190) {
                     orientation = CameraOrientationActivity.Orientation.LANDSCAPE;
                     CameraController.getInstance().rotateOrientation(orientation);
                 }

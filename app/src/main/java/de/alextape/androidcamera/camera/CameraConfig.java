@@ -1,7 +1,7 @@
 package de.alextape.androidcamera.camera;
 
 /**
- * Created by thinker on 01.07.15.
+ * Just a wrapper class to store configuration parameters.
  */
 public class CameraConfig {
 

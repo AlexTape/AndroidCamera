@@ -4,13 +4,11 @@ import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-import java.io.IOException;
-
 import de.alextape.androidcamera.camera.CameraController;
 import de.alextape.androidcamera.camera.interfaces.CameraCallbackInterface;
 
 /**
- * Created by thinker on 30.06.15.
+ * This callback is responsible for the camera surface view.
  */
 public class CameraCallback implements SurfaceHolder.Callback, CameraCallbackInterface {
 
@@ -24,11 +22,7 @@ public class CameraCallback implements SurfaceHolder.Callback, CameraCallbackInt
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.d(TAG, "surfaceCreated");
-        try {
-            CameraController.getInstance().getCamera().setPreviewDisplay(holder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        CameraController.getInstance().setPreviewDisplay(holder);
     }
 
     @Override

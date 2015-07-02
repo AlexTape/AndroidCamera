@@ -1,7 +1,6 @@
 package de.alextape.androidcamera.camera.tasks;
 
 import android.graphics.Bitmap;
-import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
@@ -10,7 +9,7 @@ import de.alextape.androidcamera.camera.CameraConfig;
 import de.alextape.androidcamera.camera.CameraController;
 
 /**
- * Created by thinker on 01.07.15.
+ * This async task is resonsible for async frame processing (against e.g. ndk).
  */
 public class AsyncCameraTask extends AsyncTask<byte[], Void, Boolean> {
 
@@ -61,15 +60,9 @@ public class AsyncCameraTask extends AsyncTask<byte[], Void, Boolean> {
             Log.i(TAG, "processing time = " + String.valueOf(t2 - t1));
         }
 
-        Camera camera = CameraController.getInstance().getCamera();
-
-        if (camera != null) {
-            camera.addCallbackBuffer(data);
-        } else {
-            Log.d(TAG, "skipped addCallbackBuffer (mCamera==null)");
-        }
+        CameraController.getInstance().setCameraCallbackBuffer(data);
         mProcessInProgress = false;
-        //Log.i(TAG, "doInBackground " + String.valueOf(isCancelled()));
+
         return true;
     }
 
@@ -77,11 +70,9 @@ public class AsyncCameraTask extends AsyncTask<byte[], Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         //Log.i(TAG, "running onPostExecute");
 
-
         ImageView imageView = CameraController.getInstance().getImageView();
         //int width = CameraController.getInstance().parameterWidth;
         //int height = CameraController.getInstance().parameterHeight;
-
 
         int height = imageView.getHeight();
         int width = imageView.getWidth();

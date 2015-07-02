@@ -6,7 +6,7 @@ import android.os.Bundle;
 import de.alextape.androidcamera.R;
 
 /**
- * Created by thinker on 02.07.15.
+ * This class is the root activity object to define the environment of all subclasses.
  */
 public class CameraLayoutActivity extends Activity {
 

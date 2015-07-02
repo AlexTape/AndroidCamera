@@ -10,7 +10,7 @@ import android.view.WindowManager;
 import de.alextape.androidcamera.camera.CameraController;
 
 /**
- * Created by thinker on 01.07.15.
+ * This class is used to get the initial orientation before Activity.onCreate().
  */
 public class CameraApplication extends Application {
 

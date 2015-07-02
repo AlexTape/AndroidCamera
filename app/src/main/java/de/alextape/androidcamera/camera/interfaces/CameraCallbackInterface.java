@@ -4,7 +4,7 @@ import android.hardware.Camera;
 import android.view.SurfaceHolder;
 
 /**
- * Created by thinker on 01.07.15.
+ * This interface is needed to switch between linear and async frame processing.
  */
 public interface CameraCallbackInterface {
 
