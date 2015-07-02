@@ -21,11 +21,11 @@ import de.alextape.androidcamera.R;
  */
 public class CameraController {
 
-    private static final String TAG = CameraController.class.getSimpleName() + "ARGH";
+    private static final String TAG = CameraController.class.getSimpleName();
 
     private static CameraController _instance = null;
 
-    private static CameraActivity.Orientation initialOrientation = null;
+    private static CameraOrientationActivity.Orientation initialOrientation = null;
 
     private ImageView imageView;
 
@@ -61,14 +61,14 @@ public class CameraController {
     private Integer mWindowWidth;
     private Integer mWindowHeight;
 
-    private CameraActivity.Orientation mSurfaceOrientation;
+    private CameraOrientationActivity.Orientation mSurfaceOrientation;
     private List<Camera.Size> mSupportedPreviewSizes;
     private List<Camera.Size> mPreviewSizes;
     private Camera.Size mForcedPreviewSize;
     private Camera.Size mPreviewSize;
     private Integer mPreviewFormat;
 
-    public static void setInitialOrientation(CameraActivity.Orientation initialOrientation) {
+    public static void setInitialOrientation(CameraOrientationActivity.Orientation initialOrientation) {
         CameraController.initialOrientation = initialOrientation;
     }
 
@@ -92,7 +92,7 @@ public class CameraController {
             this.mSurfaceOrientation = initialOrientation;
         } else {
             // set orientation to portrait
-            this.mSurfaceOrientation = CameraActivity.Orientation.PORTRAIT;
+            this.mSurfaceOrientation = CameraOrientationActivity.Orientation.PORTRAIT;
         }
 
 
@@ -170,7 +170,7 @@ public class CameraController {
         }
     }
 
-    public void configureCamera(CameraActivity.Orientation orientation, int width, int height) {
+    public void configureCamera(CameraOrientationActivity.Orientation orientation, int width, int height) {
         Log.d(TAG, "configureCameraWithValues");
         stopAndReleaseCamera();
         mSurfaceOrientation = orientation;
@@ -186,6 +186,7 @@ public class CameraController {
     public void configureCamera() {
         Log.d(TAG, "configureCamera");
         if (mCamera != null) {
+
             mCameraParameter = mCamera.getParameters();
 
             // TODO get optimal size
@@ -227,7 +228,6 @@ public class CameraController {
 
             parameterWidth = cs.width;
             parameterHeight = cs.height;
-
             Log.d(TAG, "setPreviewSize:cs x=" + parameterWidth + "; y=" + parameterHeight);
 
             rotateOrientation();
@@ -238,7 +238,7 @@ public class CameraController {
         }
     }
 
-    public void rotateOrientation(CameraActivity.Orientation orientation) {
+    public void rotateOrientation(CameraOrientationActivity.Orientation orientation) {
         Log.d(TAG, "configureCameraWithValues");
         mSurfaceOrientation = orientation;
         rotateOrientation();
@@ -326,11 +326,11 @@ public class CameraController {
         return mWindowHeight;
     }
 
-    public CameraActivity.Orientation getOrientation() {
+    public CameraOrientationActivity.Orientation getOrientation() {
         return mSurfaceOrientation;
     }
 
-    public void setOrientation(CameraActivity.Orientation orientation) {
+    public void setOrientation(CameraOrientationActivity.Orientation orientation) {
         this.mSurfaceOrientation = orientation;
     }
 }

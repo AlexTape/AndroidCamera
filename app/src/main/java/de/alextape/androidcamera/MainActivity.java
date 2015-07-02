@@ -1,8 +1,13 @@
 package de.alextape.androidcamera;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 
 import de.alextape.androidcamera.camera.CameraActivity;
+import de.alextape.androidcamera.camera.CameraFeatures;
 import de.alextape.androidcamera.camera.CameraOrientationActivity;
 
 /**
@@ -11,6 +16,8 @@ import de.alextape.androidcamera.camera.CameraOrientationActivity;
 public class MainActivity extends CameraOrientationActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private CameraFeatures cameraFeatures;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,5 +60,6 @@ public class MainActivity extends CameraOrientationActivity {
         // The activity is about to be destroyed.
         //Log.d(TAG, "onDestroy");
     }
+
 
 }

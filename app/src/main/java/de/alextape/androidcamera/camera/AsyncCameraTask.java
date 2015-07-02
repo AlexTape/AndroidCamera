@@ -73,19 +73,22 @@ public class AsyncCameraTask extends AsyncTask<byte[], Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
         //Log.i(TAG, "running onPostExecute");
-        // set pixels
 
-        int width = CameraController.getInstance().parameterWidth;
-        int height = CameraController.getInstance().parameterHeight;
 
         ImageView imageView = CameraController.getInstance().getImageView();
+        //int width = CameraController.getInstance().parameterWidth;
+        //int height = CameraController.getInstance().parameterHeight;
+
+
+        int height = imageView.getHeight();
+        int width = imageView.getWidth();
+
+        imageView.invalidate();
+        imageView.destroyDrawingCache();
 
         Bitmap mBitmap = Bitmap.createBitmap(width, height,
                 Bitmap.Config.ARGB_8888);
         imageView.setImageBitmap(mBitmap);
-
-        imageView.invalidate();
-        imageView.destroyDrawingCache();
 
         mBitmap.setPixels(pixels, 0, width,
                 0, 0, width, height);

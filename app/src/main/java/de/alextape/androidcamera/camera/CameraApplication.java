@@ -12,27 +12,27 @@ import android.view.WindowManager;
  */
 public class CameraApplication extends Application {
 
-    private static final String TAG = CameraApplication.class.getSimpleName() + "ARGH";
+    private static final String TAG = CameraApplication.class.getSimpleName();
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         // promote initial orientation immediately
-        CameraActivity.Orientation initialOrientation = null;
+        CameraOrientationActivity.Orientation initialOrientation = null;
         final Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         switch (display.getRotation()) {
             case Surface.ROTATION_0:
-                initialOrientation = CameraActivity.Orientation.PORTRAIT;
+                initialOrientation = CameraOrientationActivity.Orientation.PORTRAIT;
                 break;
             case Surface.ROTATION_90:
-                initialOrientation = CameraActivity.Orientation.LANDSCAPE;
+                initialOrientation = CameraOrientationActivity.Orientation.LANDSCAPE;
                 break;
             case Surface.ROTATION_180:
-                initialOrientation = CameraActivity.Orientation.REVERSE_PORTRAIT;
+                initialOrientation = CameraOrientationActivity.Orientation.REVERSE_PORTRAIT;
                 break;
             case Surface.ROTATION_270:
-                initialOrientation = CameraActivity.Orientation.REVERSE_LANDSCAPE;
+                initialOrientation = CameraOrientationActivity.Orientation.REVERSE_LANDSCAPE;
                 break;
         }
         Log.d(TAG, "Initial orientation: " + initialOrientation);

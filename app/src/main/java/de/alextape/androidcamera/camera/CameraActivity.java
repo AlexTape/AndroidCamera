@@ -1,6 +1,7 @@
 package de.alextape.androidcamera.camera;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,22 +11,15 @@ import de.alextape.androidcamera.R;
 /**
  * Created by thinker on 30.06.15.
  */
-public abstract class CameraActivity extends Activity {
+public abstract class CameraActivity extends CameraRootActivity {
 
-    private static final String TAG = CameraActivity.class.getSimpleName() + "ARGH";
-
-    public enum Orientation {
-        PORTRAIT, LANDSCAPE, REVERSE_PORTRAIT, REVERSE_LANDSCAPE
-    }
+    private static final String TAG = CameraActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // The activity is being created.
         Log.d(TAG, "onCreate");
-
-        // TODO remove this later
-        setContentView(R.layout.camera_layout);
 
         // init camera
         View layoutView = this.findViewById(R.id.layoutContainer);
@@ -81,8 +75,6 @@ public abstract class CameraActivity extends Activity {
         cameraController.stopAndReleaseCamera();
         cameraController.releaseView();
     }
-
-
 
 
 }

@@ -1,11 +1,13 @@
 package de.alextape.androidcamera.camera;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.View;
@@ -17,11 +19,15 @@ import de.alextape.androidcamera.R;
 /**
  * Created by thinker on 01.07.15.
  */
-public class CameraOrientationActivity extends CameraActivity {
+public class CameraOrientationActivity extends CameraActivity implements View.OnTouchListener {
 
     private static final String TAG = CameraOrientationActivity.class.getSimpleName();
 
     private OrientationEventListener mOrientationEventListener;
+
+    public enum Orientation {
+        PORTRAIT, LANDSCAPE, REVERSE_PORTRAIT, REVERSE_LANDSCAPE
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,10 @@ public class CameraOrientationActivity extends CameraActivity {
         } else {
             finish();
         }
+
+        // get view for CameraFeatures onTouch()
+        View layoutView = this.findViewById(R.id.layoutContainer);
+        layoutView.setOnTouchListener(this);
     }
 
     @Override
@@ -70,6 +80,14 @@ public class CameraOrientationActivity extends CameraActivity {
         Log.d(TAG, "onDestroy");
         mOrientationEventListener.disable();
     }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        Log.d(TAG, "MainActivity onTouch");
+        //cameraFeatures.focusOnTouch(event);
+        return true;
+    }
+
 
     public void onConfigurationChanged(Configuration newConfiguration) {
 
@@ -123,16 +141,16 @@ public class CameraOrientationActivity extends CameraActivity {
         @Override
         public void onOrientationChanged(int degree) {
             // Fix undetected REVERSE_LANDSCAPE orientation when switching from LANDSCAPE to REVERSE_LANDSCAPE.
-            CameraActivity.Orientation orientation = CameraController.getInstance().getOrientation();
-            if (orientation == CameraActivity.Orientation.LANDSCAPE) {
+            CameraOrientationActivity.Orientation orientation = CameraController.getInstance().getOrientation();
+            if (orientation == CameraOrientationActivity.Orientation.LANDSCAPE) {
                 if (degree < 180) {
-                    orientation = CameraActivity.Orientation.REVERSE_LANDSCAPE;
+                    orientation = CameraOrientationActivity.Orientation.REVERSE_LANDSCAPE;
                     CameraController.getInstance().rotateOrientation(orientation);
                 }
             }
-            if (orientation == CameraActivity.Orientation.REVERSE_LANDSCAPE) {
+            if (orientation == CameraOrientationActivity.Orientation.REVERSE_LANDSCAPE) {
                 if (degree > 180) {
-                    orientation = CameraActivity.Orientation.LANDSCAPE;
+                    orientation = CameraOrientationActivity.Orientation.LANDSCAPE;
                     CameraController.getInstance().rotateOrientation(orientation);
                 }
             }

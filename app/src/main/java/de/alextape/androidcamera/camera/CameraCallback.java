@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class CameraCallback implements SurfaceHolder.Callback, CameraCallbackInterface {
 
-    private static final String TAG = CameraCallback.class.getSimpleName() + "ARGH";
+    private static final String TAG = CameraCallback.class.getSimpleName();
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
