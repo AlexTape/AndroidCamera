@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 
-import de.alextape.androidcamera.R;
 import de.alextape.androidcamera.camera.CameraController;
 
 /**
@@ -75,9 +74,8 @@ public class CameraOrientationActivity extends CameraActivity {
     public void onConfigurationChanged(Configuration newConfiguration) {
 
         super.onConfigurationChanged(newConfiguration);
-        final View view = findViewById(R.id.layoutContainer);
 
-        ViewTreeObserver observer = view.getViewTreeObserver();
+        ViewTreeObserver observer = layoutView.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
             @Override
@@ -85,12 +83,12 @@ public class CameraOrientationActivity extends CameraActivity {
 
                 Orientation orientation = getScreenOrientation();
                 Log.d(TAG,
-                        String.format("new width=%d; new height=%d; new orientation=" + orientation, view.getWidth(),
-                                view.getHeight()));
+                        String.format("new width=%d; new height=%d; new orientation=" + orientation, layoutView.getWidth(),
+                                layoutView.getHeight()));
 
-                CameraController.getInstance().configureCamera(orientation, view.getWidth(), view.getHeight());
+                CameraController.getInstance().configureCamera(orientation, layoutView.getWidth(), layoutView.getHeight());
 
-                view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                layoutView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
     }

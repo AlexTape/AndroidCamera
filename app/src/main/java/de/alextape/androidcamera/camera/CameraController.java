@@ -57,11 +57,12 @@ public class CameraController {
         Log.d(TAG, "CameraController");
 
         this.imageView = (ImageView) layoutView.findViewById(R.id.imageView);
-
         this.mSurfaceView = (SurfaceView) layoutView.findViewById(R.id.cameraSurface);
+
         this.mSurfaceHolder = mSurfaceView.getHolder();
         this.mSurfaceHolder.addCallback(mCameraCallback);
         this.mSurfaceHolder.setKeepScreenOn(true);
+
         // TODO TYPE GPU???
         this.mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
