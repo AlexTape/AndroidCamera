@@ -2,6 +2,7 @@ package de.alextape.androidcamera.camera.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 
 import de.alextape.androidcamera.R;
 
@@ -10,12 +11,15 @@ import de.alextape.androidcamera.R;
  */
 public class CameraLayoutActivity extends Activity {
 
+    protected View layoutView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // TODO remove this later
         setContentView(R.layout.camera_layout);
+        this.layoutView = this.findViewById(R.id.layoutContainer);
     }
 
 }

@@ -2,9 +2,7 @@ package de.alextape.androidcamera.camera.activities;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
-import de.alextape.androidcamera.R;
 import de.alextape.androidcamera.camera.CameraConfig;
 import de.alextape.androidcamera.camera.CameraController;
 import de.alextape.androidcamera.camera.callbacks.AsyncCameraCallback;
@@ -22,9 +20,6 @@ public abstract class CameraActivity extends CameraLayoutActivity {
         super.onCreate(savedInstanceState);
         // The activity is being created.
         Log.d(TAG, "onCreate");
-
-        // init camera
-        View layoutView = this.findViewById(R.id.layoutContainer);
 
         // init CameraController
         if (CameraConfig.ASYNC_CAMERA) {

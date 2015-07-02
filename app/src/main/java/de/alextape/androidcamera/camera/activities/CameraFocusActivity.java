@@ -11,7 +11,6 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.alextape.androidcamera.R;
 import de.alextape.androidcamera.camera.CameraController;
 import de.alextape.androidcamera.camera.callbacks.AutoFocusCallback;
 
@@ -30,7 +29,6 @@ public class CameraFocusActivity extends CameraOrientationActivity implements Vi
         Log.d(TAG, "onCreate");
 
         // get view for onTouch()
-        View layoutView = this.findViewById(R.id.layoutContainer);
         layoutView.setOnTouchListener(this);
     }
 
@@ -141,49 +139,51 @@ public class CameraFocusActivity extends CameraOrientationActivity implements Vi
             case 0:
                 if (focusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
                     CameraController.getInstance().setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-                } else
+                } else {
                     returnThis = "Auto Mode not supported";
+                }
                 break;
             case 1:
                 if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
                     CameraController.getInstance().setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-                } else
+                } else {
                     returnThis = "Continuous Video Mode not supported";
+                }
                 break;
             case 2:
                 if (focusModes.contains(Camera.Parameters.FOCUS_MODE_EDOF)) {
                     CameraController.getInstance().setFocusMode(Camera.Parameters.FOCUS_MODE_EDOF);
-
-                } else
+                } else {
                     returnThis = "EDOF Mode not supported";
+                }
                 break;
             case 3:
                 if (focusModes.contains(Camera.Parameters.FOCUS_MODE_FIXED)) {
                     CameraController.getInstance().setFocusMode(Camera.Parameters.FOCUS_MODE_FIXED);
-
-                } else
+                } else {
                     returnThis = "Fixed Mode not supported";
+                }
                 break;
             case 4:
                 if (focusModes.contains(Camera.Parameters.FOCUS_MODE_INFINITY)) {
                     CameraController.getInstance().setFocusMode(Camera.Parameters.FOCUS_MODE_INFINITY);
-
-                } else
+                } else {
                     returnThis = "Infinity Mode not supported";
+                }
                 break;
             case 5:
                 if (focusModes.contains(Camera.Parameters.FOCUS_MODE_MACRO)) {
                     CameraController.getInstance().setFocusMode(Camera.Parameters.FOCUS_MODE_MACRO);
-
-                } else
+                } else {
                     returnThis = "Macro Mode not supported";
+                }
                 break;
             case 6:
                 if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
                     CameraController.getInstance().setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-
-                } else
+                } else {
                     returnThis = "Continuous Picture Mode not supported";
+                }
                 break;
         }
 
@@ -201,29 +201,30 @@ public class CameraFocusActivity extends CameraOrientationActivity implements Vi
             case 0:
                 if (FlashModes.contains(Camera.Parameters.FLASH_MODE_AUTO)) {
                     CameraController.getInstance().setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
-
-                } else
+                } else {
                     returnThis = "Auto Mode not supported";
+                }
                 break;
             case 1:
                 if (FlashModes.contains(Camera.Parameters.FLASH_MODE_OFF)) {
                     CameraController.getInstance().setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-
-                } else
+                } else {
                     returnThis = "Off Mode not supported";
+                }
                 break;
             case 2:
                 if (FlashModes.contains(Camera.Parameters.FLASH_MODE_ON)) {
                     CameraController.getInstance().setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-
-                } else
+                } else {
                     returnThis = "On Mode not supported";
+                }
                 break;
             case 3:
                 if (FlashModes.contains(Camera.Parameters.FLASH_MODE_RED_EYE)) {
                     CameraController.getInstance().setFlashMode(Camera.Parameters.FLASH_MODE_RED_EYE);
-                } else
+                } else {
                     returnThis = "Red Eye Mode not supported";
+                }
                 break;
             case 4:
                 if (FlashModes.contains(Camera.Parameters.FLASH_MODE_TORCH)) {
