@@ -42,7 +42,7 @@ public abstract class CameraActivity extends CameraLayoutActivity {
         super.onResume();
         // The activity has become visible (it is now "resumed").
         Log.d(TAG, "onResume");
-        //cameraController.startCamera();
+        CameraController.getInstance().startCamera();
     }
 
     @Override
@@ -50,7 +50,7 @@ public abstract class CameraActivity extends CameraLayoutActivity {
         super.onPause();
         // Another activity is taking focus (this activity is about to be "paused").
         Log.d(TAG, "onPause");
-        //cameraController.stopCamera();
+        CameraController.getInstance().stopAndReleaseCamera();
     }
 
     @Override
@@ -58,7 +58,7 @@ public abstract class CameraActivity extends CameraLayoutActivity {
         super.onStop();
         // The activity is no longer visible (it is now "stopped")
         Log.d(TAG, "onStop");
-        //cameraController.stopCamera();
+        CameraController.getInstance().stopAndReleaseCamera();
     }
 
     @Override
@@ -66,9 +66,8 @@ public abstract class CameraActivity extends CameraLayoutActivity {
         super.onDestroy();
         // The activity is about to be destroyed.
         Log.d(TAG, "onDestroy");
-        CameraController cameraController = CameraController.getInstance();
-        cameraController.stopAndReleaseCamera();
-        cameraController.releaseView();
+        CameraController.getInstance().stopAndReleaseCamera();
+        CameraController.getInstance().releaseView();
     }
 
 }

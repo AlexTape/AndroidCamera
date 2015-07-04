@@ -52,7 +52,7 @@ public class CameraController {
     private Integer mPreviewFormat;
     private CameraInitializedCallback mCameraInitializedCallback;
 
-    private CameraController(Context context, View layoutView, CameraCallback mCameraCallback) {
+    private CameraController(Context context, View layoutView, CameraCallbackInterface mCameraCallback) {
 
         Log.d(TAG, "CameraController");
 
@@ -69,13 +69,11 @@ public class CameraController {
         // TODO get initial orientation
         if (initialOrientation != null) {
             Log.d(TAG, "Trigger initial orientation");
-
             this.mSurfaceOrientation = initialOrientation;
         } else {
             // set orientation to portrait
             this.mSurfaceOrientation = CameraOrientationActivity.Orientation.PORTRAIT;
         }
-
 
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
@@ -109,7 +107,7 @@ public class CameraController {
         return _instance;
     }
 
-    public static CameraController create(Context context, View layoutView, CameraCallback cameraCallback) {
+    public static CameraController create(Context context, View layoutView, CameraCallbackInterface cameraCallback) {
         Log.d(TAG, "create");
         _instance = new CameraController(context, layoutView, cameraCallback);
         return _instance;
@@ -156,7 +154,7 @@ public class CameraController {
             mCamera.setPreviewDisplay(mSurfaceHolder);
 
             if (CameraConfig.ASYNC_CAMERA) {
-                mCamera.setPreviewCallback((AsyncCameraCallback) mCameraCallback);
+                mCamera.setPreviewCallback(mCameraCallback);
             }
 
             mCamera.startPreview();
@@ -348,6 +346,7 @@ public class CameraController {
 
     public void setPreviewDisplay(SurfaceHolder holder) {
         try {
+            mSurfaceHolder = holder;
             mCamera.setPreviewDisplay(holder);
         } catch (IOException e) {
             e.printStackTrace();

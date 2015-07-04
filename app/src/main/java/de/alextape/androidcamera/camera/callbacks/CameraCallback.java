@@ -17,6 +17,7 @@ public class CameraCallback implements SurfaceHolder.Callback, CameraCallbackInt
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
         // unused for this class
+        Log.d(TAG, "ASYNC TEST");
     }
 
     @Override

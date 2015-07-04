@@ -3,6 +3,7 @@ package de.alextape.androidcamera.camera.callbacks;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.util.Log;
+import android.view.SurfaceHolder;
 
 import de.alextape.androidcamera.camera.CameraController;
 import de.alextape.androidcamera.camera.tasks.AsyncCameraTask;
@@ -18,7 +19,7 @@ public class AsyncCameraCallback extends CameraCallback implements Camera.Previe
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
 
-        //Log.d(TAG, "onPreviewFrame");
+        Log.d(TAG, "onPreviewFrame");
         if (CameraController.getInstance().getPreviewFormat() != ImageFormat.NV21) {
 
             Log.d(TAG, "wrong format");
@@ -30,6 +31,13 @@ public class AsyncCameraCallback extends CameraCallback implements Camera.Previe
             }
 
         }
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        Log.d(TAG, "surfaceChanged2");
+        Log.d(TAG, String.format("Format=%d; width=%d; height=%d", format, width, height));
+        Log.d(TAG, String.format("CameraControllerFormat: %d; NeededFormat: %d;", CameraController.getInstance().getPreviewFormat(), ImageFormat.NV21));
     }
 
 }
