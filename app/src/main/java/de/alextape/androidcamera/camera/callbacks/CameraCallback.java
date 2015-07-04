@@ -4,6 +4,7 @@ import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+import de.alextape.androidcamera.camera.CameraConfig;
 import de.alextape.androidcamera.camera.CameraController;
 import de.alextape.androidcamera.camera.interfaces.CameraCallbackInterface;
 
@@ -29,6 +30,7 @@ public class CameraCallback implements SurfaceHolder.Callback, CameraCallbackInt
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.d(TAG, "surfaceChanged");
         Log.d(TAG, String.format("Format=%d; width=%d; height=%d", format, width, height));
+        CameraController.getInstance().reconfigure();
     }
 
     @Override

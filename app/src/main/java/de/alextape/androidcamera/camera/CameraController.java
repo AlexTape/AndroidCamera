@@ -362,6 +362,19 @@ public class CameraController {
         }
     }
 
+    public void reconfigure() {
+        try {
+            mCamera.setPreviewDisplay(mSurfaceHolder);
+            if (CameraConfig.ASYNC_CAMERA) {
+                mCamera.setPreviewCallback((AsyncCameraCallback) mCameraCallback);
+            }
+            CameraController.getInstance().configureCamera();
+            mCamera.startPreview();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public enum CameraType {
         FRONT_CAMERA, BACK_CAMERA
     }

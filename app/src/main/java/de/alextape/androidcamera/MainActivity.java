@@ -64,21 +64,21 @@ public class MainActivity extends HardwareCamera {
 
         Integer mode = null;
         String result = null;
-
-        // Return a list of Available Flash modes
-        String[] flashOptions = getFlashOptions();
-        // pass index of option to setFlashMode(int)
-        result = setFlashMode(1);
-        if (result == null) {
-            Log.d(TAG, "Success");
-        } else {
-            Log.d(TAG, "Fail: " + result);
-        }
-
+//
+//        // Return a list of Available Flash modes
+//        String[] flashOptions = getFlashOptions();
+//        // pass index of option to setFlashMode(int)
+//        result = setFlashMode(1);
+//        if (result == null) {
+//            Log.d(TAG, "Success");
+//        } else {
+//            Log.d(TAG, "Fail: " + result);
+//        }
+//
         // Returns a list of available Focus modes
         String[] focusOptions = getFlashOptions();
         // pass index of option to setFocusMode(int)
-        result = setFocusMode(1);
+        result = setFocusMode(6);
         if (result == null) {
             Log.d(TAG, "Success");
         } else {
